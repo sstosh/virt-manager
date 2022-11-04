@@ -697,6 +697,7 @@ class StorageVolume(_StorageObject):
                 log.debug("Using vol create flags=%s", createflags)
                 vol = self.pool.createXML(xml, createflags)
 
+            meter.update(self.capacity, True)
             meter.end()
             log.debug("Storage volume '%s' install complete.", self.name)
             return vol
