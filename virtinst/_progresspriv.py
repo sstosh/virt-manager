@@ -106,13 +106,13 @@ class BaseMeter:
         self.last_amount_read = 0
         self.last_update_time = now
 
-    def update(self, amount_read):
+    def update(self, amount_read, force):
         # for a real gui, you probably want to override and put a call
         # to your mainloop iteration function here
         assert type(amount_read) is int
 
         now = time.time()
-        if (not self.last_update_time or
+        if (force or not self.last_update_time or
                 (now >= self.last_update_time + self.update_period)):
             self.re.update(amount_read, now)
             self.last_amount_read = amount_read

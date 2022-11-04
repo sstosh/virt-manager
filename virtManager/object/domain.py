@@ -50,7 +50,7 @@ def start_job_progress_thread(vm, meter, progtext):
                     meter.start(progtext, data_total)
 
                 progress = data_total - data_remaining
-                meter.update(progress)
+                meter.update(progress, False)
             except Exception:  # pragma: no cover
                 log.exception("Error calling jobinfo")
                 return

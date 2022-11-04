@@ -112,11 +112,12 @@ def _upload_file(conn, meter, destpool, src):
             blocksize = 1024 * 1024  # 1 MiB
             data = fileobj.read(blocksize)
             if not data:
+                meter.update(total, True)
                 break
 
             safe_send(data)
             total += len(data)
-            meter.update(total)
+            meter.update(total, False)
 
         # Cleanup
         stream.finish()

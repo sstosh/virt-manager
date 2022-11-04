@@ -34,9 +34,9 @@ class Meter:
         self._total_read = 0
         self._meter.start(text, size)
 
-    def update(self, new_total):
+    def update(self, new_total, force):
         self._total_read = new_total
-        self._meter.update(new_total)
+        self._meter.update(new_total, force)
 
     def end(self):
         self._meter.end()

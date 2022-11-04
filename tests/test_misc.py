@@ -167,18 +167,28 @@ def test_misc_meter():
         with unittest.mock.patch("time.time", return_value=1.0):
             m.start(text, startval)
         with unittest.mock.patch("time.time", return_value=1.1):
-            m.update(0)
+            m.update(0, False)
         with unittest.mock.patch("time.time", return_value=1.5):
-            m.update(0)
+            m.update(0, False)
         with unittest.mock.patch("time.time", return_value=2.0):
-            m.update(100)
+            m.update(100, False)
         with unittest.mock.patch("time.time", return_value=3.0):
-            m.update(200)
+            m.update(200, False)
         with unittest.mock.patch("time.time", return_value=4.0):
-            m.update(2000)
+            m.update(2000, False)
         with unittest.mock.patch("time.time", return_value=5.0):
-            m.update(4000)
+            m.update(4000, False)
         with unittest.mock.patch("time.time", return_value=6.0):
+            m.end()
+
+    def _test_meter_end(m, force=False, startval=10000, text="Meter text test"):
+        with unittest.mock.patch("time.time", return_value=1.0):
+            m.start(text, startval)
+        with unittest.mock.patch("time.time", return_value=1.1):
+            m.update(4000, force)
+        with unittest.mock.patch("time.time", return_value=1.2):
+            m.update(8000, force)
+        with unittest.mock.patch("time.time", return_value=1.3):
             m.end()
 
     # Basic output testing
@@ -221,6 +231,19 @@ def test_misc_meter():
     _test_meter_values(meter, 0)
     out = meter.output.getvalue().replace("\r", "\n")
     utils.diff_compare(out, os.path.join(utils.DATADIR, "meter", "meter6.txt"))
+
+    # end() is called before meter is updated.
+    # In this case, we needs to call the update(num, True) before end() is called.
+    meter = _progresspriv.TextMeter(output=io.StringIO())
+    _test_meter_end(meter, False)
+    out = meter.output.getvalue().replace("\r", "\n")
+    utils.diff_compare(out, os.path.join(utils.DATADIR, "meter", "meter7.txt"))
+
+    # end() is called after meter is updated.
+    meter = _progresspriv.TextMeter(output=io.StringIO())
+    _test_meter_end(meter, True)
+    out = meter.output.getvalue().replace("\r", "\n")
+    utils.diff_compare(out, os.path.join(utils.DATADIR, "meter", "meter8.txt"))
 
     # BaseMeter coverage
     meter = _progresspriv.BaseMeter()

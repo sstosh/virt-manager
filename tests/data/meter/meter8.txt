@@ -1,0 +1,6 @@
+
+Meter text test            40% [======-          ]    0 B/s | 3.9 kB  --:-- ETA 
+
+Meter text test            80% [=============-   ]  20 kB/s | 7.8 kB  00:00 ETA 
+
+Meter text test                                             | 7.8 kB  00:00 ... 

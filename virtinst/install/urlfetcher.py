@@ -118,10 +118,11 @@ class _URLFetcher(object):
         while 1:
             buff = urlobj.read(self._block_size)
             if not buff:
+                self.meter.update(total, True)
                 break
             fileobj.write(buff)
             total += len(buff)
-            self.meter.update(total)
+            self.meter.update(total, False)
         fileobj.flush()
         return total
 
@@ -253,7 +254,8 @@ class _HTTPURLFetcher(_URLFetcher):
         for data in urlobj.iter_content(chunk_size=self._block_size):
             fileobj.write(data)
             total += len(data)
-            self.meter.update(total)
+            self.meter.update(total, False)
+        self.meter.update(total, True)
         fileobj.flush()
         return total
 

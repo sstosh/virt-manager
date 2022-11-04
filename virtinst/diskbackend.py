@@ -617,6 +617,7 @@ class CloneStorageCreator(_StorageCreator):
                     l = os.read(src_fd, clone_block_size)
                     s = len(l)
                     if s == 0:
+                        meter.update(i, True)
                         meter.end()
                         break
                     # check sequence of zeros
@@ -629,7 +630,7 @@ class CloneStorageCreator(_StorageCreator):
                             break
                     i += s
                     if i < size_bytes:
-                        meter.update(i)
+                        meter.update(i, False)
             except OSError as e:  # pragma: no cover
                 log.debug("Error while cloning", exc_info=True)
                 msg = (_("Error cloning diskimage "
