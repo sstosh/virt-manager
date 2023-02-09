@@ -41,6 +41,9 @@ class Meter:
     def end(self):
         self._meter.end()
 
+    def end_sparse(self, capacity):
+        self._meter.end_sparse(capacity)
+
 
 def make_meter(quiet):
     return Meter(quiet=quiet)

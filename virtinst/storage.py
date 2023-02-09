@@ -682,7 +682,7 @@ class StorageVolume(_StorageObject):
         try:
             t.start()
             msg = _("Allocating '%(filename)s'") % {"filename": self.name}
-            meter.start(msg, self.capacity)
+            meter.start(msg, self.allocation)
 
             if self.conn.is_really_test():
                 # Test suite doesn't support any flags, so reset them
@@ -695,8 +695,13 @@ class StorageVolume(_StorageObject):
                 log.debug("Using vol create flags=%s", createflags)
                 vol = self.pool.createXML(xml, createflags)
 
+            # Print a created disk size instead of a sparse file size
             meter.update(self.capacity)
-            meter.end()
+
+            # Update the meter's end value to self.capacity,
+            # because the meter is updated with self.capacity.
+            meter.end_sparse(self.capacity)
+
             log.debug("Storage volume '%s' install complete.", self.name)
             return vol
         except Exception as e:

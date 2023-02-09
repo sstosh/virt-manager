@@ -125,6 +125,10 @@ class BaseMeter:
     def end(self):
         self._do_end()
 
+    def end_sparse(self, capacity):
+        self.size = capacity
+        self._do_end()
+
     def _do_end(self):
         pass
 
